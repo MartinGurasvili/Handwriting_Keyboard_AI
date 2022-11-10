@@ -8,7 +8,6 @@ from tensorflow import keras
 from pathlib import Path
 import matplotlib.pyplot as plt
 import gzip
-import pickle
 import joblib
 labels = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 
@@ -36,13 +35,13 @@ def load_emnist():
     return train_x, train_y, test_x, test_y
 
 train_x, train_y, test_x, test_y = load_emnist()
-
+train_x = train_x.reshape(697932, 28, 28, 1)
 train_x = train_x / 255.0
 test_x = test_x/255.0
 
-plt.imshow(test_x[55].T,cmap = "gray")
-plt.colorbar()
-plt.show()
+# plt.imshow(test_x[55].T,cmap = "gray")
+# plt.colorbar()
+# plt.show()
 
 class myCallback(tf.keras.callbacks.Callback):
         def on_epoch_end(self, epoch, logs={}):
@@ -54,25 +53,28 @@ class myCallback(tf.keras.callbacks.Callback):
 callbacks = myCallback()
 
 model = tf.keras.models.Sequential([ 
-    tf.keras.layers.Flatten(input_shape=(28, 28)),
-    tf.keras.layers.Dense(512, activation=tf.nn.relu),
-    tf.keras.layers.Dense(len(labels), activation=tf.nn.softmax)
+    tf.keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(28, 28,1)),
+    tf.keras.layers.MaxPooling2D(2, 2),
+    tf.keras.layers.Conv2D(32, (3,3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2,2),
+    tf.keras.layers.Flatten(input_shape=(28, 28,1)),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dense(len(labels), activation='softmax')
 ]) 
 model.compile(optimizer='adam', 
                 loss='sparse_categorical_crossentropy', 
                 metrics=['accuracy']) 
 
-model.fit(train_x, train_y, epochs=2, callbacks=[callbacks])
+model.fit(train_x, train_y, epochs=40, callbacks=[callbacks])
 joblib.dump(model, 'model.pkl')
-# file = open('model.pkl', 'wb')
-# pickle.dump(model, file) 
+
     
 # classes = model.predict(test_x[55], verbose = 1)
 
 # print(classes[0])
 # print(labels[int(classes[0])])
   
-plt.imshow(test_x[55].T,cmap = "gray")
-plt.colorbar()
-plt.show()
+# plt.imshow(test_x[55].T,cmap = "gray")
+# plt.colorbar()
+# plt.show()
 

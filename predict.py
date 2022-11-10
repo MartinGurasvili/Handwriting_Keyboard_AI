@@ -8,12 +8,10 @@ from tensorflow import keras
 from pathlib import Path
 import matplotlib.pyplot as plt
 import gzip
-import pickle
 import joblib
 labels = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 
-# file = open('model.pkl', 'rb')
-# model = pickle.load(file)
+
 model = joblib.load("model.pkl")
 folder = str(os.fspath(Path(__file__).resolve().parent / "data"))
 
@@ -34,11 +32,11 @@ test_x = test_x/255.0
 num = random.randint(0,len(test_x))
 # print(None,test_x[55])
 
-plt.imshow(test_x[55].T,cmap = "gray")
+plt.imshow(test_x[num].T,cmap = "gray")
 plt.colorbar()
 plt.show()
 
-classes = model.predict(np.array([test_x[55]]))
+classes = model.predict(np.array([test_x[num]]))
 temp = np.round(classes)
 print(int(list(np.where(temp==1))[1]))
 print(labels[int(list(np.where(temp==1))[1])])

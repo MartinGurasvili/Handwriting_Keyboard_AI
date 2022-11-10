@@ -3,13 +3,17 @@ import numpy as np
 import sys
 import os
 import time
-
+import joblib
+import tensorflow as tf
 #colors
 one = (255, 255, 255)
 two = (0, 0, 0)
 grey = (220,220,220)
 
-text ="hello i"
+text =""
+
+labels = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+model = joblib.load("model.pkl")
 
 pygame.init()
 
@@ -34,14 +38,29 @@ while not done:
         if event.type == pygame.QUIT:
             done = True
         elif event.type == pygame.KEYDOWN:
-             if event.key == pygame.K_ESCAPE:
-                    print("Exit")
-                    pygame.quit()
-             if event.key == pygame.K_BACKSPACE:
-                    print("backspace",text[:-1])
-                    if text!="":
-                        text = text[:-1]
-             if event.key == pygame.K_r:
+            if event.key == pygame.K_ESCAPE:
+                print("Exit")
+                pygame.quit()
+            if event.key == pygame.K_SPACE:
+                text = text + " "
+            if event.key == pygame.K_RETURN:
+                print("Enter")
+                print(np.array([grid]).shape)
+                try:
+                    classes = model.predict(np.array([grid]).T.reshape(1,28,28))
+                    temp = np.round(classes)
+                    print(temp)
+                    print(list(np.where(temp==1))[1])
+                    # print(labels[int(list(np.where(temp==1))[1])])
+                    text = text + str(labels[int(list(np.where(temp==1))[1])])
+                except:
+                    print("Failed to recognise")
+                grid = [[0 for x in range(28)] for y in range(28)]
+            if event.key == pygame.K_BACKSPACE:
+                print("backspace",text[:-1])
+                if text!="":
+                    text = text[:-1]
+            if event.key == pygame.K_r:
                 grid = [[0 for x in range(28)] for y in range(28)]
 
         if pygame.mouse.get_pressed()[0]:
