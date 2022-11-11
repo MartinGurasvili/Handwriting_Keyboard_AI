@@ -4,10 +4,10 @@
 <img width="200" height="200"  src="https://user-images.githubusercontent.com/76784461/200849310-392f3e1b-9bae-4dd8-8dfe-6c23bb93d967.png">
 <p align="center">
     <br>
-    This is a hand writing keyboard that uses a convolutional neural network to understand what letter is drawn of the pad.<br>
+    This is a hand writing keyboard that uses a tensorflow keras convolutional neural network to understand what letter is drawn of the pad.<br>Using the emnist data set of 28x28 to train which includes numbers and letters 
     <br />
     <br>
-    <a href="https://github.com/MartinGurasvili/Handwriting_Keyboard_AI/releases/"><strong> Install Source Code</strong></a>
+    <a href="https://github.com/MartinGurasvili/Handwriting_Keyboard_AI/releases/download/v1.0.0/Handwriting.Keyboard.zip"><strong> Install Source Code with dataset</strong></a>
     <br />
     <br>
 
